@@ -11,6 +11,9 @@ void fillRand(int* arr, int n, double min, double max); // Функция, фо�
 void writer(int* A, int length); // Функция, печатающая последовательность
 void merge(int* buf, int l, int r, int m); // Функция, объединяющая отсортированные части массива
 
+int countTransfer = 0;
+int countCompare = 0;
+
 /* 
  Объединяет две отсортированные части массива array[].
  Первый подмассив с индексами arr[begin..mid]
@@ -26,8 +29,14 @@ void merge(int* array, int const left, int const mid, int const right) // реа
     int* rightArray = new int[subArrayTwo];
 
     // Копирование данныех во временные массивы leftArray[] и rightArray[] из общего array[]
-    for (auto i = 0; i < subArrayOne; i++) leftArray[i] = array[left + i];
-    for (auto j = 0; j < subArrayTwo; j++) rightArray[j] = array[mid + 1 + j];
+    for (auto i = 0; i < subArrayOne; i++) { 
+        leftArray[i] = array[left + i]; 
+        countTransfer++;
+    }
+    for (auto j = 0; j < subArrayTwo; j++) { 
+        rightArray[j] = array[mid + 1 + j];
+        countTransfer++;
+    }
 
     int indexOfSubArrayOne = 0; // Индекс первого подмассива
     int indexOfSubArrayTwo = 0; // Индекс второго подмассива
@@ -38,10 +47,14 @@ void merge(int* array, int const left, int const mid, int const right) // реа
         if (leftArray[indexOfSubArrayOne] >= rightArray[indexOfSubArrayTwo]) {
             array[indexOfMergedArray] = leftArray[indexOfSubArrayOne];
             indexOfSubArrayOne++;
+            countCompare++;
+            countTransfer++;
         }
         else {
             array[indexOfMergedArray] = rightArray[indexOfSubArrayTwo];
             indexOfSubArrayTwo++;
+            countCompare++;
+            countTransfer++;
         }
         indexOfMergedArray++;
     }
@@ -50,12 +63,16 @@ void merge(int* array, int const left, int const mid, int const right) // реа
         array[indexOfMergedArray] = rightArray[indexOfSubArrayTwo];
         indexOfSubArrayTwo++;
         indexOfMergedArray++;
+        countCompare++;
+        countTransfer++;
     }
     // Копируем оставшиеся элементы из leftArray[]
     while (indexOfSubArrayOne < subArrayOne) {
         array[indexOfMergedArray] = leftArray[indexOfSubArrayOne];
         indexOfSubArrayOne++;
         indexOfMergedArray++;
+        countCompare++;
+        countTransfer++;
     }
     
 }
@@ -63,6 +80,7 @@ void merge(int* array, int const left, int const mid, int const right) // реа
 /* Сортировка слиянием */
 void mergeSort(int* array, int const begin, int const end) // реализован по блоксхеме ✔️
 {
+    countCompare++;
     if (begin >= end)
         return; // Выход из рекурсии
 
@@ -74,16 +92,30 @@ void mergeSort(int* array, int const begin, int const end) // реализова
 
 // сортировка выбором
 void selectionSort(int* arr, int lenght) { // реализован по блоксхеме ✔️
+    int countComprasion = 0;
+    int transfers = 0;
+
     for (int i = 0; i < lenght - 1; ++i)
     {
+        countComprasion++;
         int biggest = i; 
         for (int j = i + 1; j < lenght; ++j)
         {
-            if (arr[j] > arr[biggest])
+            countComprasion++;
+            if (arr[j] > arr[biggest]) {
                 biggest = j; // наибольший элемент среди текущих
+                countComprasion++;
+            }
         }
+        
+
         swap(arr[i], arr[biggest]); // меняем местами наибольший и i-ый элемент
+        //for (int j = 0; j < lenght; j++) cout << "arr[" << j << "] = " << arr[j] << endl; // вывод промежуточных перестановок
+        transfers +=1;
+
     }
+    cout << "Кол-во сравнений " << countComprasion << endl;
+    cout << "Кол-во пересылок " << transfers << endl;
 }
 
 // заполнение массива arr рандомными числами
@@ -116,6 +148,8 @@ int main()
     mergeSort(arrRand, 0, lenght); // сортировка слиянием
     cout <<"Отсортированный массив:" << endl;
     writer(arrRand, lenght); // печать массива
+    cout << "Кол-во сравнений " << countCompare << endl;
+    cout << "Кол-во пересылок " << countTransfer << endl;
 
     cout << "Значения массива до сортировки:" << endl;
     fillRand(arrRand, lenght, 0, 30); // заполнение массива случайными числами
