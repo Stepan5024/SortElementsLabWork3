@@ -6,8 +6,9 @@
 using namespace std;
 
 void mergeSort(int* arr, int l, int r); // Функция, формирующая рандомную последовательность
-void FillRand(int* arr, int n, double min, double max); // Функция, формирующая рандомную последовательность
-void Writer(int* A, int length); // Функция, печатающая последовательность
+void selectionSort(int* arr, int lenght);
+void fillRand(int* arr, int n, double min, double max); // Функция, формирующая рандомную последовательность
+void writer(int* A, int length); // Функция, печатающая последовательность
 void merge(int* buf, int l, int r, int m); // Функция, объединяющая отсортированные части массива
 
 // Merges two subarrays of array[].
@@ -75,14 +76,27 @@ void mergeSort(int* array, int const begin, int const end)
     merge(array, begin, mid, end);
 }
 
-void FillRand(int* arr, int length, double min, double max) {
+void selectionSort(int* arr, int lenght) {
+    for (int i = 0; i < lenght - 1; ++i)
+    {
+        int biggest = i;
+        for (int j = i + 1; j < lenght; ++j)
+        {
+            if (arr[j] > arr[biggest])
+                biggest = j;
+        }
+        swap(arr[i], arr[biggest]);
+    }
+}
+
+void fillRand(int* arr, int length, double min, double max) {
     for (int i = 0; i < length; i++) {
         arr[i] = 10 + ((double)rand() / RAND_MAX) * (max - min);
     }
-    //arr[length - 1] = INT_MAX;
-    Writer(arr, length);
+
+    writer(arr, length);
 }
-void Writer(int* A, int length) {
+void writer(int* A, int length) {
     for (int i = 0; i < length; i++) {
         cout << "arr[" << i << "] = " << A[i] << endl;
     }
@@ -92,18 +106,18 @@ int main()
     setlocale(LC_ALL, "Russian");
     system("color F0");
     srand(time(NULL));
-    int n = 0;
-    cout << "Введите размер последовательности: "; cin >> n;
+    int lenght = 0;
+    cout << "Введите размер последовательности: "; cin >> lenght;
 
-    int* arrRand = new int[n]; // рандомная последовательность
+    int* arrRand = new int[lenght]; // рандомная последовательность
     cout << "Given array is \n";
-    FillRand(arrRand, n, 0, 30);
-
-    mergeSort(arrRand, 0, n - 1);
-    cout << "" << endl;
-    cout << "" << endl;
+    fillRand(arrRand, lenght, 0, 30);
+    mergeSort(arrRand, 0, lenght);
     cout << "\nSorted array is \n";
-    Writer(arrRand, n);
-
-
+    writer(arrRand, lenght);
+    cout << "Given array is \n";
+    fillRand(arrRand, lenght, 0, 30);
+    selectionSort(arrRand, lenght);
+    cout << "\nSorted array is \n";
+    writer(arrRand, lenght);
 }
